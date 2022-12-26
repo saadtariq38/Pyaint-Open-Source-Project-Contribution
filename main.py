@@ -218,32 +218,32 @@ def draw_bezier():
                 grid[a][b] = drawing_color
 
 def get_solid_bspline_coordinates(X,Y):
-    list= []
+    coor= []
     for i in range(4):
-        list.append((X + i, Y - 7 - i))
-        list.append((X - i, Y - 7 + i))
-    list.append((X,Y))
+        coor.append((X + i, Y - 7 - i))
+        coor.append((X - i, Y - 7 + i))
+    coor.append((X,Y))
     for i in range(4):
-        list.append((X + i, Y + 7 - i))
-        list.append((X - i, Y + 7 + i))
+        coor.append((X + i, Y + 7 - i))
+        coor.append((X - i, Y + 7 + i))
     for i in range(4):
-        list.append((X - i, Y - i))
-        list.append((X + i, Y + i))
-    return list
+        coor.append((X - i, Y - i))
+        coor.append((X + i, Y + i))
+    return coor
 
 def get_dotted_bspline_coordinates(X,Y):
-    list= []
+    coor= []
     for i in range(0,4,2):
-        list.append((X + i, Y - 7 - i))
-        list.append((X - i, Y - 7 + i))
-    list.append((X,Y))
+        coor.append((X + i, Y - 7 - i))
+        coor.append((X - i, Y - 7 + i))
+    coor.append((X,Y))
     for i in range(0,4,2):
-        list.append((X + i, Y + 7 - i))
-        list.append((X - i, Y + 7 + i))
+        coor.append((X + i, Y + 7 - i))
+        coor.append((X - i, Y + 7 + i))
     for i in range(0,4,2):
-        list.append((X - i, Y - i))
-        list.append((X + i, Y + i))
-    return list
+        coor.append((X - i, Y - i))
+        coor.append((X + i, Y + i))
+    return coor
     
 def draw_bspline():
     pos = pygame.mouse.get_pos()
@@ -262,42 +262,91 @@ def draw_bspline():
 
 def draw_arc(row,col,radius):
     if DOTTED:
-        grid[row][col]=drawing_color
-        for i in range(radius-1):
-            if(i%2!=0):
-                grid[row-i][col+i]=drawing_color
-            x=row-i
-            y=col+i
-        grid[x][y+1]=drawing_color
-        for i in range(3):
-            if(i%2!=0):
-                grid[x+i][y+1+i]=drawing_color
+        pos = pygame.mouse.get_pos()
+        x, y = get_row_col_from_pos(pos)
+        for z in range(x, x-5, -2):
+            grid[z][y-10] = drawing_color
+        for z in range(x, x-5, -2):
+            grid[z][y+10] = drawing_color
+        
+        tempY = y-10
+        tempX = x-5
+        
+        for s in range(0, 7, 2):
+            grid[tempX][tempY] = drawing_color
+            tempX= tempX - 2
+            tempY = tempY + 2
             
-        for i in range(3,6):
-            if(i%2!=0):
-                grid[x+i][y+4]=drawing_color
-        grid[x+6][y+3]=drawing_color
-        grid[x+7][y+2]=drawing_color    
-        for i in range(radius):
-            if(i%2==0):
-                grid[row][col+i]=drawing_color
+        tempY = y + 10
+        tempX = x-5
+        
+        for s in range(0, 7, 2):
+            grid[tempX][tempY] = drawing_color
+            tempX= tempX - 2
+            tempY = tempY - 2
+        
+        tempX = x - radius - 1
+        tempY = y - 3
+        
+        for s in range(0, 7,2):
+            grid[tempX][tempY] = drawing_color
+            tempY = tempY + 2
+        
             
     else:
-        grid[row][col]=drawing_color
-        for i in range(radius-1):
-            grid[row-i][col+i]=drawing_color
-            x=row-i
-            y=col+i
-        grid[x][y+1]=drawing_color
-        for i in range(3):
-            grid[x+i][y+1+i]=drawing_color
-        for i in range(3,6):
-             grid[x+i][y+4]=drawing_color
-        grid[x+6][y+3]=drawing_color
-        grid[x+7][y+2]=drawing_color    
-        for i in range(radius):
-            grid[row][col+i]=drawing_color  
-    
+        pos = pygame.mouse.get_pos()
+        x, y = get_row_col_from_pos(pos)
+        for z in range(x, x-5, -1):
+            grid[z][y-10] = drawing_color
+        for z in range(x, x-5, -1):
+            grid[z][y+10] = drawing_color
+        
+        tempY = y-10
+        tempX = x-5
+        
+        for s in range(7):
+            grid[tempX][tempY] = drawing_color
+            tempX= tempX - 1
+            tempY = tempY + 1
+            
+        tempY = y + 10
+        tempX = x-5
+        
+        for s in range(7):
+            grid[tempX][tempY] = drawing_color
+            tempX= tempX - 1
+            tempY = tempY - 1
+        
+        tempX = x - radius - 1
+        tempY = y - 3
+        
+        for s in range(7):
+            grid[tempX][tempY] = drawing_color
+            tempY = tempY + 1
+        
+        
+            
+            
+        
+        
+        
+        """
+            grid[row][col]=drawing_color
+            for i in range(radius-1):
+                grid[row-i][col+i]=drawing_color
+                x=row-i
+                y=col+i
+            grid[x][y+1]=drawing_color
+            for i in range(3):
+                grid[x+i][y+1+i]=drawing_color
+            for i in range(3,6):
+                grid[x+i][y+4]=drawing_color
+            grid[x+6][y+3]=drawing_color
+            grid[x+7][y+2]=drawing_color    
+            for i in range(radius):
+                grid[row][col+i]=drawing_color  
+        
+        """
 
 def paint_using_brush(row, col, size):
     if BRUSH_SIZE == 1:
@@ -313,126 +362,127 @@ def paint_using_brush(row, col, size):
                 grid[r+i][c+j] = drawing_color         
 
 def get_heart_coordinates(X,Y):
-    list = []
+    coor = []
     for i in range(3):
-        list.append((X - i, Y - i))
-        list.append((X - i, Y + i))
-        list.append((X-3,Y-3-i))
-        list.append((X - 3, Y + 3 + i))
+        coor.append((X - i, Y - i))
+        coor.append((X - i, Y + i))
+        coor.append((X-3,Y-3-i))
+        coor.append((X - 3, Y + 3 + i))
 
     for i in range(2):
-        list.append((X - 2 + i, Y - 6 - i))
-        list.append((X - 2 + i, Y + 6 + i))
-        list.append((X + i, Y - 7 ))
-        list.append((X + i, Y + 7 ))
+        coor.append((X - 2 + i, Y - 6 - i))
+        coor.append((X - 2 + i, Y + 6 + i))
+        coor.append((X + i, Y - 7 ))
+        coor.append((X + i, Y + 7 ))
 
     for i in range(7):
-        list.append((X + 2 + i, Y - 6 + i))
-        list.append((X + 2 + i, Y + 6 - i))
+        coor.append((X + 2 + i, Y - 6 + i))
+        coor.append((X + 2 + i, Y + 6 - i))
 
-    return list
+    return coor
 
 def get_dotted_heart_coordinates(X,Y):
-    list = []
+    coor = []
     for i in range(3):
-        #list.append((X - i, Y - i))
-        list.append((X - i, Y + i))
+        #coor.append((X - i, Y - i))
+        coor.append((X - i, Y + i))
 
     for i in range(3):
-        list.append((X - 3, Y + 3 + i))
+        coor.append((X - 3, Y + 3 + i))
 
     for i in range(2):
-        list.append((X - 2 + i, Y + 6 + i))
+        coor.append((X - 2 + i, Y + 6 + i))
 
     for i in range(2):
-        list.append((X + i, Y + 7))
+        coor.append((X + i, Y + 7))
 
     for i in range(7):
-        list.append((X + 2 + i, Y + 6 - i))
+        coor.append((X + 2 + i, Y + 6 - i))
 
     for i in range(1,7):
-        list.append((X + 8 - i, Y - i))
+        coor.append((X + 8 - i, Y - i))
 
     for i in range(2):
-        list.append((X + 1 - i, Y - 7))
+        coor.append((X + 1 - i, Y - 7))
 
     for i in range(2):
-        list.append((X - 1 - i, Y - 7 + i))
+        coor.append((X - 1 - i, Y - 7 + i))
 
     for i in range(3):
-        list.append((X - 3, Y - 5 + i))
+        coor.append((X - 3, Y - 5 + i))
 
     for i in range(2):
-        list.append((X - 2 + i, Y - 2 + i))
+        coor.append((X - 2 + i, Y - 2 + i))
 
 
 
 
-    return list
+    return coor
 
 
 def draw_heart():
-    radius = 5
+    
     pos = pygame.mouse.get_pos()
     print(pos)
     dotted = True
     x, y = get_row_col_from_pos(pos)
-    if DOTTED:
-         coordinates = get_dotted_heart_coordinates(x,y)
-         for i in range(0,len(coordinates),2):
-             x, y = coordinates[i]
-             grid[x][y] = drawing_color
-    else:
+    if not DOTTED:
         coordinates = get_heart_coordinates(x, y)
         for i in coordinates:
             x,y = i
             grid[x][y] = drawing_color
+    else:
+         coordinates = get_dotted_heart_coordinates(x,y)
+         for i in range(0,len(coordinates),2):
+             x, y = coordinates[i]
+             grid[x][y] = drawing_color
             
             
 def get_circle_coordinates(X,Y,radius):
-    list= []
+    coor= []
+
+    for i in range(3):
+        coor.append((X-2-i,Y-5+i))
+        coor.append((X - 2 - i, Y + 5 - i))
+        coor.append((X + 4 - i, Y - 3 - i))
+        coor.append((X + 4 - i, Y + 3 + i))
+
     for i in range(5):
-        list.append((X-5,Y-2+i))
-        list.append((X+5,Y-2+i))
-
+        coor.append((X-5,Y-2+i))
+        coor.append((X+5,Y-2+i))
+        
     for i in range(3):
-        list.append((X-2-i,Y-5+i))
-        list.append((X - 2 - i, Y + 5 - i))
-        list.append((X + 4 - i, Y - 3 - i))
-        list.append((X + 4 - i, Y + 3 + i))
-
-    for i in range(3):
-        list.append((X-1+i,Y-5))
-        list.append((X-1+i, Y+5))
-    return list
+        coor.append((X-1+i,Y-5))
+        coor.append((X-1+i, Y+5))
+        
+    return coor
 
 def get_dotted_circle_coordinates(X,Y):
-    list = []
+    coor = []
     for i in range(5):
-        list.append((X - 5, Y - 2 + i))
+        coor.append((X - 5, Y - 2 + i))
 
     for i in range(3):
-        list.append((X - 2 - i, Y + 5 - i))
+       coor.append((X - 1 + i, Y + 5))
 
     for i in range(3):
-       list.append((X - 1 + i, Y + 5))
-
-    for i in range(3):
-        list.append((X + 4 - i, Y + 3 + i))
+        coor.append((X - 2 - i, Y + 5 - i))
 
     for i in range(5):
-        list.append((X + 5, Y - 2 + i))
+        coor.append((X + 5, Y - 2 + i))
 
     for i in range(3):
-        list.append((X + 4 - i, Y - 3 - i))
+        coor.append((X + 4 - i, Y + 3 + i))
 
     for i in range(3):
-        list.append((X - 1 + i, Y - 5))
+        coor.append((X - 1 + i, Y - 5))
 
     for i in range(3):
-        list.append((X - 2 - i, Y - 5 + i))
+        coor.append((X - 2 - i, Y - 5 + i))
 
-    return list
+    for i in range(3):
+        coor.append((X + 4 - i, Y - 3 - i))
+    return coor
 
 def draw_circle():
     radius = 20
@@ -442,9 +492,9 @@ def draw_circle():
     x, y = get_row_col_from_pos(pos)
     if DOTTED:
         
-         coordinates = get_dotted_circle_coordinates(x,y)
-         for i in range(0,len(coordinates),2):
-             x, y = coordinates[i]
+         coor = get_dotted_circle_coordinates(x,y)
+         for i in range(0,len(coor),2):
+             x, y = coor[i]
              grid[x][y] = drawing_color
     else:
         """
@@ -453,8 +503,8 @@ def draw_circle():
         pygame.display.flip()
         
         """
-        coordinates = get_circle_coordinates(x, y, radius)
-        for i in coordinates:
+        coor = get_circle_coordinates(x, y, radius)
+        for i in coor:
             x, y = i
             grid[x][y] = drawing_color
             
@@ -599,7 +649,7 @@ while run:
                 row, col = get_row_col_from_pos(pos)
                 
                 if STATE == "ARC":
-                    draw_arc(row,col,15)
+                    draw_arc(row,col,10)
                 
                 if STATE == "B-SPLINE":
                     draw_bspline()
