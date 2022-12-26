@@ -176,6 +176,46 @@ def draw_line(start, end):
     pygame.draw.line(WIN, BLACK, start, end, 6)
     
     pygame.display.flip()
+    
+def draw_bezier():
+    pos = pygame.mouse.get_pos()
+    print(pos)
+    x, y = get_row_col_from_pos(pos)
+    step=1
+
+    if DOTTED:
+        step=2
+    
+    for i in range(0,3,1):
+        for j in range(i,i+3,step):
+            a=x-i-3
+            b=y+j+2*i
+            if inBounds(a,b):
+                grid[a][b] = drawing_color
+                
+    for i in range(0,2,1):
+        for j in range(i,i+2,step):
+            a=x-i-1
+            b=y+j+i-4
+            if inBounds(a,b):
+                grid[a][b] = drawing_color
+                
+    if inBounds(x,y-5):
+        grid[x][y-5] = drawing_color
+    
+    for i in range(0,3,1):
+        for j in range(i,i+3,step):
+            a=x+i+3
+            b=y+j+2*i
+            if inBounds(a,b):
+                grid[a][b] = drawing_color
+                
+    for i in range(0,2,1):
+        for j in range(i,i+2,step):
+            a=x+i+1
+            b=y+j+i-4
+            if inBounds(a,b):
+                grid[a][b] = drawing_color
 
 def get_solid_bspline_coordinates(X,Y):
     list= []
@@ -561,8 +601,11 @@ while run:
                 if STATE == "ARC":
                     draw_arc(row,col,15)
                 
-                if STATE == "B-spline":
+                if STATE == "B-SPLINE":
                     draw_bspline()
+                    
+                if STATE == "BEZIER":
+                    draw_bezier()
                     
                 if STATE == "LINE":
 
@@ -653,8 +696,12 @@ while run:
                         break
                     
                     if button.name == "B-spline":
-                        STATE = "B-spline"
+                        STATE = "B-SPLINE"
                         break
+                    if button.name == "Bezier":
+                        STATE = "BEZIER"
+                        break
+                        
                      
                     if button.name == "Brush":
                         STATE = "COLOR"
